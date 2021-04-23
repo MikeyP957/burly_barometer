@@ -41,13 +41,26 @@ router.get('/api/workouts/:id', async (req,res) => {
 })
 
 router.post('/api/workouts', async ({body}, res) => {
+    const workout = new Workout({
+        exercises: [{
+            type: body.type,
+            name: body.name,
+            duration: body.duration,
+            distance: body.distance,
+            weight: body.weight,
+            reps: body.reps,
+            sets: body.sets
+        }]
+
+    })
+    
     try {
-        const newWorkout = await Workout.create(body)
+        const newWorkout = await workout.save()
 
         console.log('newWorkout', newWorkout)
 
         res.json(newWorkout)
-
+``
     } catch (err) {
         res.status(500).json(err)
     }
