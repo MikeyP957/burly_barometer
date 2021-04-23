@@ -1,24 +1,7 @@
 const router = require('express').Router();
 const Workout = require('../models/Workout');
 
-router.post('/api/workouts', async ({body}, res) => {
-    console.log('**************************');
-    console.log('creating a workout');
-        try {
-            const newWorkout = await Workout.create({
-                type: body.type,
-                name: body.name,
-                duration: body.duration
-            })
-            if(!newWorkout){
-                res.status(400).json({message: "Nothing to create"})
-            }
-            console.log('newWorkout', newWorkout)
-            res.status(200).json(newWorkout)
-        } catch (err) {
-            res.status(500).json(err)
-        }
-})
+
 //this needs to get one workout
 router.get('/api/workouts', async (req,res) => {
     try {
@@ -36,21 +19,8 @@ router.get('/api/workouts', async (req,res) => {
     }
 })
 
-router.put('/api/workouts/:id', async (req,res) => {
-    console.log('one Workout')
-    try{
-        const newWorkoutId = await Workout.findOne({__id: req.params.id})
-        console.log('new workout id', newWorkoutId)
-    
-        res.send(newWorkoutId)
-    } catch(err) { 
-        res.status(404).json(err)
-    }
-
-})
-
 router.get('/api/workouts/range', async (req,res) => {
-    const lastSeven = await Workout.find({}).sort({date: -1});
+    const lastSeven = await Workout.find({});
     if(!lastSeven){
         consol.log('there is nothing here')
     }
@@ -59,6 +29,42 @@ router.get('/api/workouts/range', async (req,res) => {
     
     //finish this (order by date, render top 7)
 })
+
+router.get('/api/workouts/:id', async (req,res) => {
+    try{
+        const oneWorkout = await Workout.findOne({_id: req.params.id })
+
+        res.status(200).json(oneWorkout)
+    } catch (err) {
+        res.status(500).json(err)
+    }
+})
+
+router.post('/api/workouts', async ({body}, res) => {
+    try {
+        const newWorkout = await Workout.create(body)
+
+        console.log('newWorkout', newWorkout)
+
+        res.json(newWorkout)
+
+    } catch (err) {
+        res.status(500).json(err)
+    }
+})
+
+router.put('/api/workouts/:id', async (req,res) => {
+    console.log('one Workout')
+    try{
+        const newWorkoutId = await Workout.findOne({__id: req.params.id}, {$push: {exercises: req.body}})
+           
+        res.send(newWorkoutId)
+    } catch(err) { 
+        res.status(404).json(err)
+    }
+
+})
+
 // router.post('/api/workouts/bulk', ({body}, res) => {
 //     console.log('body', body)
     
