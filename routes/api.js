@@ -7,7 +7,7 @@ router.get('/api/workouts', async (req,res) => {
     try {
         console.log('trying to get all the workouts')
 
-        const lastWorkouts = await Workout.find({}).sort({date: -1});
+        const lastWorkouts = await Workout.find({});
         if(!lastWorkouts) {
             res.status(400).json({message: 'Nothing to find'})
         }
@@ -20,7 +20,7 @@ router.get('/api/workouts', async (req,res) => {
 })
 
 router.get('/api/workouts/range', async (req,res) => {
-    const lastSeven = await Workout.find({});
+    const lastSeven = await Workout.find({}).sort({day:1}).limit(7);
     if(!lastSeven){
         consol.log('there is nothing here')
     }
@@ -54,13 +54,13 @@ router.post('/api/workouts', async ({body}, res) => {
 })
 
 router.put('/api/workouts/:id', async (req,res) => {
-    console.log('one Workout')
+   
     try{
-        const newWorkoutId = await Workout.findOne({__id: req.params.id}, {$push: {exercises: req.body}})
-           
-        res.send(newWorkoutId)
+        const updateWorkout = await Workout.findOneAndUpdate({__id: req.params.id}, {$push: {exercises: req.body}})
+           console.log("updateworkout", updateWorkout)
+        res.json(updateWorkout)
     } catch(err) { 
-        res.status(404).json(err)
+        res.status(400).json(err)
     }
 
 })
