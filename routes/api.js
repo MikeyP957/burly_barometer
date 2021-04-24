@@ -2,12 +2,10 @@ const router = require('express').Router();
 const Workout = require('../models/Workout');
 
 
-//this needs to get one workout
+//this gets only the latest workout
 router.get('/api/workouts', async (req,res) => {
     try {
-        console.log('trying to get all the workouts')
-
-        const lastWorkouts = await Workout.find({});
+        const lastWorkouts = await Workout.find({}).sort({day: -1}).limit(1);
         if(!lastWorkouts) {
             res.status(400).json({message: 'Nothing to find'})
         }
@@ -60,7 +58,6 @@ router.post('/api/workouts', async ({body}, res) => {
         console.log('newWorkout', newWorkout)
 
         res.json(newWorkout)
-``
     } catch (err) {
         res.status(500).json(err)
     }
