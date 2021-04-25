@@ -5,11 +5,18 @@ const Workout = require('../models/Workout');
 //this gets only the latest workout
 router.get('/api/workouts', async (req,res) => {
     try {
-        const lastWorkouts = await Workout.find({}).sort({day: -1}).limit(1);
-        if(!lastWorkouts) {
-            res.status(400).json({message: 'Nothing to find'})
-        }
+        const lastWorkouts = await Workout.find({})
+            if(!lastWorkouts) {
+                res.status(400).json({message: 'Nothing to find'})
+            }
         console.log('lastWorkouts', lastWorkouts)
+        // lastWorkouts.aggregate( [
+        //     {
+        //         $addFields: {
+        //             totalDuration: { $sum: "$exercises.duration"}
+        //         }
+        //     }
+        // ] )
 
         res.status(200).json(lastWorkouts)
     } catch(err) {

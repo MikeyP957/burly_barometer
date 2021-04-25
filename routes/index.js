@@ -6,6 +6,7 @@ route.get('/exercise', (req, res) => {
 });
 
 route.get('/stats', (req, res) => {
+    
     res.sendFile(path.join(__dirname, '../public/stats.html'));
 });
 

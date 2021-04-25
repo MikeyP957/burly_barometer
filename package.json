@@ -24,5 +24,8 @@
   "bugs": {
     "url": "https://github.com/MikeyP957/burly_barometer/issues"
   },
-  "homepage": "https://github.com/MikeyP957/burly_barometer#readme"
+  "homepage": "https://github.com/MikeyP957/burly_barometer#readme",
+  "devDependencies": {
+    "eslint": "^7.24.0"
+  }
 }
