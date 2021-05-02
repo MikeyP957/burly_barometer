@@ -107,12 +107,12 @@ app.put('/api/workouts/:id', async (req,res) => {
 })
 
 app.get('/exercise', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/exercise.html'));
+    res.sendFile(path.join(__dirname, './public/exercise.html'));
 });
 
 app.get('/stats', (req, res) => {
     
-    res.sendFile(path.join(__dirname, '../public/stats.html'));
+    res.sendFile(path.join(__dirname, './public/stats.html'));
 });
 
 
