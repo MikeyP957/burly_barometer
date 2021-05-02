@@ -1,8 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const router = require('express').Router();
 const Workout = require('./models/Workout');
-const route = require('express').Router();
 const path = require('path');
 
 
@@ -27,7 +25,7 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workout", {
 // routes
 
 //this gets only the latest workout
-router.get('/api/workouts', async (req,res) => {
+app.get('/api/workouts', async (req,res) => {
     try {
         const lastWorkouts = await Workout.aggregate([
 
@@ -45,7 +43,7 @@ router.get('/api/workouts', async (req,res) => {
     }
 })
 
-router.get('/api/workouts/range', async (req,res) => {
+app.get('/api/workouts/range', async (req,res) => {
     const lastSeven = await Workout.aggregate([
         {$addFields: {
             totalDuration: {$sum: '$exercises.duration'},
@@ -61,7 +59,7 @@ router.get('/api/workouts/range', async (req,res) => {
     //finish this (order by date, render top 7)
 })
 
-router.get('/api/workouts/:id', async (req,res) => {
+app.get('/api/workouts/:id', async (req,res) => {
     try{
         const oneWorkout = await Workout.findOne({_id: req.params.id })
 
@@ -71,7 +69,7 @@ router.get('/api/workouts/:id', async (req,res) => {
     }
 })
 
-router.post('/api/workouts', async ({body}, res) => {
+app.post('/api/workouts', async ({body}, res) => {
     const workout = new Workout({
         exercises: [{
             type: body.type,
@@ -96,7 +94,7 @@ router.post('/api/workouts', async ({body}, res) => {
     }
 })
 
-router.put('/api/workouts/:id', async (req,res) => {
+app.put('/api/workouts/:id', async (req,res) => {
    
     try{
         const updateWorkout = await Workout.findOneAndUpdate({__id: req.params.id}, {$push: {exercises: req.body}})
@@ -108,17 +106,17 @@ router.put('/api/workouts/:id', async (req,res) => {
 
 })
 
-route.get('/exercise', (req, res) => {
+app.get('/exercise', (req, res) => {
     res.sendFile(path.join(__dirname, '../public/exercise.html'));
 });
 
-route.get('/stats', (req, res) => {
+app.get('/stats', (req, res) => {
     
     res.sendFile(path.join(__dirname, '../public/stats.html'));
 });
 
-app.use(router)
-app.use(route)
+
+
 
 app.listen(PORT, () => {
   console.log(`App running on port ${PORT}!`);
